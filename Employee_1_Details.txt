@@ -1,0 +1,15 @@
+=================================================
+             EMPLOYEE DETAILS REPORT             
+=================================================
+ID               : 1
+Name             : Astitva
+Father's Name    : dilip
+Date of Birth    : 08/03/06
+Address          : kanpur
+Highest Education: btech
+Aadhar No        : 123456789012
+Mobile No        : 7890123456
+Email ID         : Astitvatiwari@gmail.com
+Salary           : 1000000.0
+Department       : tech
+=================================================

@@ -1,5 +1,3 @@
-package employee.management.system;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,32 +14,26 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-public class LoginFrame extends JFrame {
-    private final AuthService authService;
-    private final Runnable onLoginSuccess;
-    private final JTextField usernameField = new JTextField(16);
-    private final JPasswordField passwordField = new JPasswordField(16);
+public class LoginGUI extends JFrame {
+    private final JTextField usernameField = new JTextField(18);
+    private final JPasswordField passwordField = new JPasswordField(18);
 
-    public LoginFrame(AuthService authService, Runnable onLoginSuccess) {
-        this.authService = authService;
-        this.onLoginSuccess = onLoginSuccess;
+    public LoginGUI() {
+        setTitle("Employee Management System - Login");
+        setSize(420, 240);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         buildUi();
     }
 
     private void buildUi() {
-        setTitle("Employee Management System - Login");
-        setSize(420, 260);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
 
-        JLabel title = new JLabel("Employee Management System", JLabel.CENTER);
-        title.setFont(new Font("SansSerif", Font.BOLD, 20));
-        title.setForeground(new Color(25, 58, 89));
-        title.setBorder(BorderFactory.createEmptyBorder(20, 10, 8, 10));
-
-        JPanel header = new JPanel(new BorderLayout());
-        header.add(title, BorderLayout.CENTER);
+        JLabel titleLabel = new JLabel("Employee Management System", JLabel.CENTER);
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        titleLabel.setForeground(new Color(32, 64, 96));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 10, 5, 10));
+        add(titleLabel, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
@@ -52,22 +44,26 @@ public class LoginFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         formPanel.add(new JLabel("Username:"), gbc);
+
         gbc.gridx = 1;
         formPanel.add(usernameField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
         formPanel.add(new JLabel("Password:"), gbc);
+
         gbc.gridx = 1;
         formPanel.add(passwordField, gbc);
 
+        add(formPanel, BorderLayout.CENTER);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton loginButton = new JButton("Login");
+        JButton exitButton = new JButton("Exit");
         loginButton.addActionListener(event -> login());
+        exitButton.addActionListener(event -> System.exit(0));
         buttonPanel.add(loginButton);
-
-        add(header, BorderLayout.NORTH);
-        add(formPanel, BorderLayout.CENTER);
+        buttonPanel.add(exitButton);
         add(buttonPanel, BorderLayout.SOUTH);
         getRootPane().setDefaultButton(loginButton);
     }
@@ -75,14 +71,19 @@ public class LoginFrame extends JFrame {
     private void login() {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword());
-        if (authService.authenticate(username, password)) {
+
+        if (AuthService.authenticate(username, password)) {
+            EmployeeService service = new EmployeeService();
+            DashboardGUI dashboardGUI = new DashboardGUI(service);
+            dashboardGUI.setVisible(true);
             dispose();
-            onLoginSuccess.run();
         } else {
-            JOptionPane.showMessageDialog(this,
-                    "Incorrect username or password.",
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Incorrect ID or Password!",
                     "Access Denied",
-                    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
     }
 }
